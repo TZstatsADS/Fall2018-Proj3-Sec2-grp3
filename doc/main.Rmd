@@ -29,7 +29,7 @@ Set the working directory to the image folder. Specify the training and the test
 
 ```{r wkdir, eval=FALSE}
 set.seed(2018)
-setwd("./ads_fall2018_proj3") 
+setwd("../doc") 
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 # use relative path for reproducibility
 ```
@@ -93,7 +93,7 @@ if(run.feature.train){
   label_train <- dat_train$label
 }
 
-#save(dat_train, file="./output/feature_train.RData")
+save(dat_train, file="../output/feature_train.RData")
 ```
 
 
