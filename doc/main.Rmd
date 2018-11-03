@@ -176,7 +176,7 @@ test_HR_dir <- paste(test_dir, "HR/", sep="")
 
 tm_test=NA
 if(run.test){
-  load(file="../output/fit_train.RData")
+  # load(file="../output/fit_train.RData")
   tm_test <- system.time(superResolution(test_LR_dir, test_HR_dir, fit_train))
 }
 ```
@@ -186,7 +186,7 @@ Prediction performance matters, so does the running times for constructing featu
 ```{r running_time}
 cat("Time for constructing training features=", tm_feature_train[1], "s \n")
 cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
-cat("Time for training model=", tm_train[1], "s \n"),
+cat("Time for training model=", tm_train[1], "s \n")
 cat("Time for super-resolution=", tm_test[1], "s \n")
 ```
 
