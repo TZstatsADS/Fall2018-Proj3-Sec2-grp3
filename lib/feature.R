@@ -5,11 +5,7 @@
 ### Authors: Chengliang Tang/Tian Zheng
 ### Project 3
 
-extract_feat <- function(mat){
-  feat <- c(mat)[-5] - mat[2,2]
-  return(feat)
-}
-
+source("../lib/extract_feat.R")
 
 feature <- function(LR_dir, HR_dir, n_points=1000){
   
@@ -38,6 +34,7 @@ feature <- function(LR_dir, HR_dir, n_points=1000){
     width_LR <- dim(imgLR)[1]
     height_LR <- dim(imgLR)[2]
     
+    # pad after -center
     padded_image_LR <- array(0, c(width_LR+2, height_LR+2, 3))
     padded_image_LR[2:(width_LR + 1), 2:(height_LR+1), ] = imgLR[,,]
     
@@ -57,8 +54,10 @@ feature <- function(LR_dir, HR_dir, n_points=1000){
       featMat[(i-1)*n_points+j, , ] <- apply(padded_image_LR[row_LR[j]:(row_LR[j]+2), col_LR[j]:(col_LR[j]+2), ], 3, extract_feat)
     
       ### step 2.2. save the corresponding 4 sub-pixels of imgHR in labMat
-      labMat[(i-1)*n_points+j, ,] = img_HR[(row_HR[j]-1):row_HR[j], (col_HR[j]-1):col_HR[j],]
-  }
+      
+      labMat[(i-1)*n_points+j, ,] = sweep(img_HR[(row_HR[j]-1):row_HR[j], (col_HR[j]-1):col_HR[j],], 3, 
+                                          padded_image_LR[row_LR[j]+1, col_LR[j]+1,])
+      }
     
     ### step 3. repeat above for three channels
   }
