@@ -32,13 +32,13 @@ superResolution <- function(LR_dir, HR_dir, modelList){
     height_LR <- dim(imgLR)[2]
     padded_image_LR <- array(0, c(width_LR+2, height_LR+2, 3))
     padded_image_LR[2:(width_LR + 1), 2:(height_LR+1), ] = imgLR[,,]
+    row_LR <- floor((1:(width_LR * height_LR) - 1)/height_LR + 1)
+    col_LR <- (1:(width_LR * height_LR) - 1) %% height_LR + 1
     for(j in 1:(width_LR * height_LR)){
-      row_LR <- floor((j - 1)/height_LR + 1)
-      col_LR <- (j - 1) %% height_LR + 1
-      featMat[j, , ] <- apply(padded_image_LR[row_LR:(row_LR+2), col_LR:(col_LR+2), ], 3, extract_feat)
+      featMat[j, , ] <- apply(padded_image_LR[row_LR[j]:(row_LR[j]+2), col_LR[j]:(col_LR[j]+2), ], 3, extract_feat)
     }
     featMat[1:height_LR, c(1,4,6),] <- 0
-    featMat[(width_LR * height_LR-height_LR):(width_LR * height_LR), c(3,5,8),] <- 0 
+    featMat[(width_LR * height_LR-height_LR+1):(width_LR * height_LR), c(3,5,8),] <- 0 
     featMat[(1:width_LR-1)*height_LR+1, c(1,2,3),] <- 0 
     featMat[(1:width_LR)*height_LR, c(6,7,8),] <- 0 
     
@@ -50,22 +50,20 @@ superResolution <- function(LR_dir, HR_dir, modelList){
     pred_Mat <- array(predMat, dim=c(width_LR*height_LR, 4, 3))
     img_HR_pred <- array(NA, c(width_HR, height_HR, 3))
     for(j in 1:(width_LR * height_LR)) {
-      row_LR <- floor((j - 1)/height_LR + 1)
-      col_LR <- (j - 1) %% height_LR + 1
-      img_HR_pred[(2*row_LR-1):(2*row_LR), (2*col_LR-1):(2*col_LR),] <- pred_Mat[j,,]
+      img_HR_pred[(2*row_LR[j]-1):(2*row_LR[j]), (2*col_LR[j]-1):(2*col_LR[j]),] <- pred_Mat[j,,]
     }
     img_center <- imageData(imgLR[rep(1:width_LR, times = rep(2, width_LR)),,])
     img_center <- img_center[, rep(1:height_LR, times = rep(2, height_LR)),]
     img_pred <- img_HR_pred + img_center
     
-    img_display <- Image(img_pred)
+    img_display <- Image(img_pred, colormode = 'Color')
     # display(img_display)
-    # writeImage(img_display, paste0(HR_dir,  "img_pred", "_", sprintf("%04d", i), ".jpg"))
-    imgHR <- readImage(pathHR)
-    mse_i <- sum((imgHR - img_HR_pred)^2)/(3*height_HR*width_HR)
+    # writeImage(img_display, pastere0(HR_dir,  "img_pred", "_", sprintf("%04d", i), ".jpg"))
+    imgHR <- imageData(readImage(pathHR))
+    mse_i <- sum((imgHR - img_pred)^2)/(3*height_HR*width_HR)
     if (i==1){
       mse <- mse_i
-      psnr <- 20*log(255) - 10*log(mse_i)
+      psnr <- 20*log(1) - 10*log(mse_i)
     } else {
       mse <- c(mse, mse_i)
       psnr <- c(psnr, 20*log(1) - 10*log(mse_i))
