@@ -177,7 +177,7 @@ test_HR_dir <- paste(test_dir, "HR/", sep="")
 tm_test=NA
 if(run.test){
   # load(file="../output/fit_train.RData")
-  tm_test <- system.time(superResolution(test_LR_dir, test_HR_dir, fit_train))
+  tm_test <- system.time(result <- superResolution(test_LR_dir, test_HR_dir, fit_train))
 }
 ```
 

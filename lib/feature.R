@@ -57,7 +57,11 @@ feature <- function(LR_dir, HR_dir, n_points=1000){
       
       labMat[(i-1)*n_points+j, ,] = sweep(img_HR[(row_HR[j]-1):row_HR[j], (col_HR[j]-1):col_HR[j],], 3, 
                                           padded_image_LR[row_LR[j]+1, col_LR[j]+1,])
-      }
+    }
+    featMat[((i-1)*n_points):(i*n_points), , ][row_LR == 1, c(1,4,6),] <- 0
+    featMat[((i-1)*n_points):(i*n_points), , ][row_LR == width_LR, c(3,5,8),] <- 0 
+    featMat[((i-1)*n_points):(i*n_points), , ][col_LR == 1, c(1,2,3),] <- 0 
+    featMat[((i-1)*n_points):(i*n_points), , ][col_LR == height_LR, c(6,7,8),] <- 0 
     
     ### step 3. repeat above for three channels
   }
