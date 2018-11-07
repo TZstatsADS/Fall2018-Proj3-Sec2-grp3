@@ -7,8 +7,8 @@ Term: Fall 2018
 
 + Team #3
 + Team members
-	+ Shaolong Lin
 	+ Jiaxi Wu
+	+ Shaolong Lin
 	+ Jiaming Yan
 	+ Zhirong Li
 	+ Sarah Faye Wu
