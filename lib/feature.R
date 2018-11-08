@@ -22,6 +22,7 @@ feature <- function(LR_dir, HR_dir, n_points=1000){
   
   ### store feature and responses
   featMat <- array(NA, c(n_files * n_points, 8, 3))
+  # featMat <- array(NA, c(n_files * n_points, 24, 3))
   labMat <- array(NA, c(n_files * n_points, 4, 3))
   
   
@@ -37,6 +38,8 @@ feature <- function(LR_dir, HR_dir, n_points=1000){
     # pad after -center
     padded_image_LR <- array(0, c(width_LR+2, height_LR+2, 3))
     padded_image_LR[2:(width_LR + 1), 2:(height_LR+1), ] = imgLR[,,]
+    # padded_image_LR <- array(0, c(width_LR+4, height_LR+4, 3))
+    # padded_image_LR[3:(width_LR + 2), 3:(height_LR + 2), ] = imgLR[,,]
     
     samples <- sample.int(height_LR * width_LR, n_points)
     row_LR <- floor((samples - 1)/height_LR + 1)
@@ -51,17 +54,30 @@ feature <- function(LR_dir, HR_dir, n_points=1000){
     ###           tips: padding zeros for boundary points
     
     for(j in 1:n_points) {
-      featMat[(i-1)*n_points+j, , ] <- apply(padded_image_LR[row_LR[j]:(row_LR[j]+2), col_LR[j]:(col_LR[j]+2), ], 3, extract_feat)
-    
+      featMat[(i-1)*n_points+j, , ] <- apply(padded_image_LR[row_LR[j]:(row_LR[j]+2), col_LR[j]:(col_LR[j]+2), ], 3, extract_feat_8)
+
       ### step 2.2. save the corresponding 4 sub-pixels of imgHR in labMat
-      
-      labMat[(i-1)*n_points+j, ,] = sweep(img_HR[(row_HR[j]-1):row_HR[j], (col_HR[j]-1):col_HR[j],], 3, 
+
+      labMat[(i-1)*n_points+j, ,] = sweep(img_HR[(row_HR[j]-1):row_HR[j], (col_HR[j]-1):col_HR[j],], 3,
                                           padded_image_LR[row_LR[j]+1, col_LR[j]+1,])
     }
     featMat[((i-1)*n_points):(i*n_points), , ][row_LR == 1, c(1,4,6),] <- 0
-    featMat[((i-1)*n_points):(i*n_points), , ][row_LR == width_LR, c(3,5,8),] <- 0 
-    featMat[((i-1)*n_points):(i*n_points), , ][col_LR == 1, c(1,2,3),] <- 0 
-    featMat[((i-1)*n_points):(i*n_points), , ][col_LR == height_LR, c(6,7,8),] <- 0 
+    featMat[((i-1)*n_points):(i*n_points), , ][row_LR == width_LR, c(3,5,8),] <- 0
+    featMat[((i-1)*n_points):(i*n_points), , ][col_LR == 1, c(1,2,3),] <- 0
+    featMat[((i-1)*n_points):(i*n_points), , ][col_LR == height_LR, c(6,7,8),] <- 0
+    
+    # for(j in 1:n_points) {
+    #   featMat[(i-1)*n_points+j, , ] <- apply(padded_image_LR[row_LR[j]:(row_LR[j]+4), col_LR[j]:(col_LR[j]+4), ], 3, extract_feat_24)
+    #   
+    #   ### step 2.2. save the corresponding 4 sub-pixels of imgHR in labMat
+    #   
+    #   labMat[(i-1)*n_points+j, ,] = sweep(img_HR[(row_HR[j]-1):row_HR[j], (col_HR[j]-1):col_HR[j],], 3,
+    #                                       padded_image_LR[row_LR[j]+1, col_LR[j]+1,])
+    # }
+    # featMat[((i-1)*n_points):(i*n_points), , ][row_LR == 1, c(1,6,11,15,20),] <- 0
+    # featMat[((i-1)*n_points):(i*n_points), , ][row_LR == width_LR, c(5,10,14,19,24),] <- 0
+    # featMat[((i-1)*n_points):(i*n_points), , ][col_LR == 1, c(1,2,3,4,5),] <- 0
+    # featMat[((i-1)*n_points):(i*n_points), , ][col_LR == height_LR, c(20,21,22,23,24),] <- 0
     
     ### step 3. repeat above for three channels
   }

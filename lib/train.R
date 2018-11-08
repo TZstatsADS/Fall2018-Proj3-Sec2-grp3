@@ -34,7 +34,7 @@ train <- function(dat_train, label_train, par=NULL){
   # cl <- makeCluster(2)
   # registerDoParallel(cl)
   # 
-  # foreach(i=1:12) %dopar% {
+  # foreach(i=1:12, .packages='gbm') %dopar% {
     # library("gbm")
   for(i in 1:12){
     ## calculate column and channel
