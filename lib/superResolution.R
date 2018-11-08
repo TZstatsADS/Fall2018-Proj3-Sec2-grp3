@@ -73,20 +73,23 @@ superResolution <- function(LR_dir, HR_dir, modelList){
     # print(time3-time2)
     # display(img_display)
     writeImage(img_display, paste0("../data/test_set/SR-B/",  "img_pred", "_", sprintf("%04d", i), ".jpg"))
-    imgHR <- imageData(readImage(pathHR))
-    mse_i <- sum((imgHR - img_pred)^2)/(3*height_HR*width_HR)
-    if (i==1){
-      mse <- mse_i
-      psnr <- 20*log10(1) - 10*log10(mse_i)
-    } else {
-      mse <- c(mse, mse_i)
-      psnr <- c(psnr, 20*log10(1) - 10*log10(mse_i))
-    }
     
-    # end_time <- Sys.time()
-    # print(end_time-time3)
+  #   imgHR <- imageData(readImage(pathHR))
+  #   mse_i <- sum((imgHR - img_pred)^2)/(3*height_HR*width_HR)
+  #   if (i==1){
+  #     mse <- mse_i
+  #     psnr <- 20*log10(1) - 10*log10(mse_i)
+  #   } else {
+  #     mse <- c(mse, mse_i)
+  #     psnr <- c(psnr, 20*log10(1) - 10*log10(mse_i))
+  #   }
+  #   
+  #   # end_time <- Sys.time()
+  #   # print(end_time-time3)
+  # }
+  # return(list(mse = mean(mse), psnr = mean(psnr)))
   }
-  return(list(mse = mean(mse), psnr = mean(psnr)))
+  return(1)
 }
 
 
